@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pastéis de Belém® — Menu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #b5922a;
+      --gold-light: #d4ac4a;
+      --dark-navy: #0d1626;
+      --cream: #f9f3e8;
+      --cream-dark: #ede3cf;
+      --text: #3a2e20;
+      --white: #fff;
+      --border: rgba(181,146,42,0.2);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid var(--border);
+    }
+    nav {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px;
+    }
+    .nav-logo { padding: 12px 0; flex-shrink: 0; }
+    .nav-logo img { height: 52px; }
+
+    .nav-links { list-style: none; display: flex; align-items: center; gap: 0; }
+    .nav-links a {
+      color: var(--text); text-decoration: none;
+      font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+      padding: 22px 16px; display: block; transition: color .2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--gold); }
+    .hamburger {
+      display: none; flex-direction: column; justify-content: center;
+      gap: 5px; width: 40px; height: 40px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+    }
+    .hamburger span { display: block; width: 26px; height: 2px; background: var(--text); border-radius: 2px; }
+
+    /* ── MOBILE MENU ── */
+    .mobile-menu {
+      display: none; position: fixed; top: 0; left: 0;
+      width: 52%; min-width: 220px; height: 100vh;
+      background: var(--dark-navy); z-index: 1050;
+      flex-direction: column; justify-content: center;
+      padding: 60px 0 40px;
+      transform: translateX(-100%); transition: transform .35s ease;
+    }
+    .mobile-menu.open { transform: translateX(0); }
+    .mobile-menu ul { list-style: none; }
+    .mobile-menu ul li a {
+      display: block; color: rgba(255,255,255,0.65);
+      text-decoration: none; font-size: 14px;
+      letter-spacing: 2px; text-transform: uppercase;
+      padding: 18px 32px; border-left: 3px solid transparent; transition: color .2s;
+    }
+    .mobile-menu ul li a:hover { color: #fff; border-left-color: var(--gold); }
+    .mobile-menu .lang-row { display: flex; gap: 16px; padding: 24px 32px 0; }
+    .mobile-menu .lang-row a { color: rgba(255,255,255,0.4); text-decoration: none; font-size: 12px; letter-spacing: 2px; }
+    .mobile-menu .lang-row a.active-lang { color: #fff; font-weight: 700; }
+    .menu-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 1040; }
+    .menu-backdrop.open { display: block; }
+
+    /* ── HERO ── */
+    .hero {
+      margin-top: 76px;
+      background: var(--dark-navy);
+      display: flex; flex-direction: column; align-items: center;
+      padding: 60px 32px 48px;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url('https://pasteisdebelem.pt/menu/assets/img/pastel-embalagem.jpg') center/cover no-repeat;
+      opacity: 0.15;
+    }
+    .hero img.hero-product {
+      width: 160px; height: 160px; border-radius: 50%;
+      object-fit: cover; object-position: center;
+      border: 3px solid var(--gold);
+      position: relative; z-index: 1;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 400; color: #fff;
+      margin-top: 24px; position: relative; z-index: 1;
+    }
+    .hero .gold-dots {
+      color: var(--gold-light); letter-spacing: 6px;
+      font-size: .9rem; display: block;
+      margin: 8px 0; position: relative; z-index: 1;
+    }
+    .hero-prices {
+      display: flex; gap: 32px; margin-top: 20px;
+      position: relative; z-index: 1;
+    }
+    .hero-price {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(181,146,42,0.4);
+      padding: 14px 28px; color: #fff; text-align: center;
+    }
+    .hero-price .amount { font-size: 1.6rem; font-weight: 700; color: var(--gold-light); display: block; }
+    .hero-price .label { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; opacity: .7; }
+
+    /* ── TAB NAV ── */
+    .tab-nav-wrapper {
+      position: sticky; top: 76px; z-index: 900;
+      background: var(--white);
+      border-bottom: 2px solid var(--border);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tab-nav-wrapper::-webkit-scrollbar { display: none; }
+    .tab-nav {
+      display: flex; max-width: 1200px; margin: 0 auto;
+      padding: 0 16px; gap: 0; white-space: nowrap;
+    }
+    .tab-btn {
+      background: none; border: none; cursor: pointer;
+      font-family: 'Lato', sans-serif;
+      font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+      color: #8a7a62; padding: 18px 20px;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px; transition: color .2s, border-color .2s;
+      white-space: nowrap;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+    /* ── TAB CONTENT ── */
+    .tab-section { display: none; }
+    .tab-section.active { display: block; }
+
+    /* ── SECTION HEADER ── */
+    .section-header {
+      max-width: 1100px; margin: 0 auto;
+      padding: 56px 32px 32px;
+    }
+    .section-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 400; color: var(--text);
+    }
+    .section-header .gold-line {
+      width: 48px; height: 2px;
+      background: var(--gold); margin: 12px 0;
+    }
+
+    /* ── PRODUCT GRID ── */
+    .product-grid {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 32px 64px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 28px;
+    }
+
+    .product-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: box-shadow .3s, transform .3s;
+    }
+    .product-card:hover {
+      box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+      transform: translateY(-3px);
+    }
+    .product-card .img-wrap {
+      width: 100%; aspect-ratio: 1;
+      overflow: hidden; background: var(--cream);
+    }
+    .product-card .img-wrap img {
+      width: 100%; height: 100%; object-fit: cover;
+      display: block; transition: transform .6s ease;
+    }
+    .product-card:hover .img-wrap img { transform: scale(1.06); }
+
+    .product-info { padding: 18px 18px 0; }
+    .product-info h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem; font-weight: 400; margin-bottom: 4px;
+    }
+    .product-info .subtitle {
+      font-size: 12px; color: #8a7a62;
+      font-style: italic; line-height: 1.5;
+    }
+    .product-variants { padding: 12px 18px; }
+    .product-variants .variant {
+      display: flex; justify-content: space-between;
+      align-items: center;
+      font-size: 13px; color: #5a4a35;
+      padding: 4px 0;
+      border-bottom: 1px dashed rgba(181,146,42,0.15);
+    }
+    .product-variants .variant:last-child { border-bottom: none; }
+    .variant .price { color: var(--gold); font-weight: 700; font-size: 14px; }
+
+    /* ── BUY BUTTON ── */
+    .btn-buy {
+      display: block; width: calc(100% - 36px);
+      margin: 4px 18px 18px;
+      background: var(--dark-navy);
+      color: #fff; border: none; cursor: pointer;
+      font-family: 'Lato', sans-serif;
+      font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase;
+      padding: 13px 0;
+      transition: background .25s, color .25s;
+      /* ===== CHECKOUT HOOK =====
+           Add onclick="addToCart('{item-id}', '{name}', price)"
+           or replace with your payment link / Stripe / WooCommerce handler
+         ======================== */
+    }
+    .btn-buy:hover { background: var(--gold); }
+    .btn-buy-gold {
+      display: block; width: calc(100% - 36px);
+      margin: 4px 18px 18px;
+      background: transparent;
+      color: var(--gold); border: 1px solid var(--gold); cursor: pointer;
+      font-family: 'Lato', sans-serif;
+      font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase;
+      padding: 12px 0;
+      transition: background .25s, color .25s;
+    }
+    .btn-buy-gold:hover { background: var(--gold); color: #fff; }
+
+    /* ── LIST ITEMS (non-image sections) ── */
+    .list-section {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 32px 64px;
+    }
+    .list-group {
+      background: var(--white);
+      border: 1px solid var(--border);
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+    .list-group-title {
+      background: var(--dark-navy);
+      color: rgba(255,255,255,0.9);
+      font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+      padding: 14px 24px;
+      font-family: 'Lato', sans-serif;
+    }
+    .list-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 24px;
+      border-bottom: 1px solid rgba(181,146,42,0.1);
+      gap: 16px;
+    }
+    .list-item:last-child { border-bottom: none; }
+    .list-item-left { flex: 1; }
+    .list-item-name { font-size: 14px; color: var(--text); font-weight: 400; }
+    .list-item-desc { font-size: 12px; color: #8a7a62; font-style: italic; margin-top: 2px; }
+    .list-item-right { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+    .list-price { color: var(--gold); font-weight: 700; font-size: 14px; white-space: nowrap; }
+    .btn-buy-sm {
+      background: var(--dark-navy); color: #fff;
+      border: none; cursor: pointer;
+      font-family: 'Lato', sans-serif;
+      font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+      padding: 8px 16px; white-space: nowrap;
+      transition: background .2s;
+      /* ===== CHECKOUT HOOK =====
+           onclick="addToCart(id, name, price)"
+         ======================== */
+    }
+    .btn-buy-sm:hover { background: var(--gold); }
+
+    /* ── FOOTNOTE ── */
+    .footnote {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 32px 48px;
+      font-size: 12px; color: #8a7a62; line-height: 2;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--cream-dark);
+      border-top: 1px solid var(--border);
+      padding: 40px 32px;
+      text-align: center; color: #5a4a35; font-size: 12px; line-height: 2;
+    }
+    footer strong { color: var(--gold); }
+    footer .footer-links { margin-top: 12px; display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; }
+    footer a { color: var(--gold); text-decoration: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .mobile-menu { display: flex; }
+      .product-grid { grid-template-columns: 1fr 1fr; gap: 16px; padding: 0 16px 48px; }
+      .section-header { padding: 40px 16px 24px; }
+      .list-section { padding: 0 16px 48px; }
+      .hero-prices { gap: 16px; }
+    }
+    @media (max-width: 480px) {
+      .product-grid { grid-template-columns: 1fr; }
+      nav { padding: 0 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- MOBILE BACKDROP -->
+<div class="menu-backdrop" id="menuBackdrop"></div>
+
+<!-- MOBILE MENU -->
+<nav class="mobile-menu" id="mobileMenu">
+  <ul>
+    <li><a href="index.html" onclick="closeMobileMenu()">História</a></li>
+    <li><a href="#" onclick="closeMobileMenu()">Fabrico</a></li>
+    <li><a href="#" onclick="closeMobileMenu()">Produtos</a></li>
+    <li><a href="#" onclick="closeMobileMenu()">Belém</a></li>
+    <li><a href="#" onclick="closeMobileMenu()">Contacto</a></li>
+    <li><a href="menu.html" onclick="closeMobileMenu()" style="color:#fff;border-left:3px solid var(--gold)">Menu</a></li>
+  </ul>
+  <div class="lang-row">
+    <a href="#" class="active-lang">EN</a>
+    <a href="#">PT</a>
+    <a href="#">ES</a>
+    <a href="#">FR</a>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<header>
+  <nav>
+    <a class="nav-logo" href="index.html">
+      <img src="https://pasteisdebelem.pt/wp-content/uploads/2014/12/pasteis-de-belem-logo.png" alt="Pastéis de Belém®" />
+    </a>
+    <ul class="nav-links">
+      <li><a href="#">História</a></li>
+      <li><a href="#">Fabrico</a></li>
+      <li><a href="#">Produtos</a></li>
+      <li><a href="#">Belém</a></li>
+      <li><a href="#">Contacto</a></li>
+      <li><a href="menu.html" class="active">Menu</a></li>
+      <li><a href="#" style="color:var(--gold)">EN ▾</a></li>
+    </ul>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <img class="hero-product" src="https://pasteisdebelem.pt/menu/assets/img/pastel-embalagem.jpg" alt="Pastéis de Belém" />
+  <h1>Pastéis de Belém®</h1>
+  <span class="gold-dots">● ● ● ● ●</span>
+  <div class="hero-prices">
+    <div class="hero-price">
+      <span class="amount">€ 1,60</span>
+      <span class="label">Single</span>
+    </div>
+    <div class="hero-price">
+      <span class="amount">€ 9,60</span>
+      <span class="label">Packet of 6</span>
+    </div>
+  </div>
+</div>
+
+<!-- TAB NAV -->
+<div class="tab-nav-wrapper">
+  <div class="tab-nav">
+    <button class="tab-btn active" onclick="showTab('pastry', this)">Pastry</button>
+    <button class="tab-btn" onclick="showTab('snacks', this)">Snacks</button>
+    <button class="tab-btn" onclick="showTab('toasts', this)">Toasts & Sandwiches</button>
+    <button class="tab-btn" onclick="showTab('beverages', this)">Beverages</button>
+    <button class="tab-btn" onclick="showTab('alcoholic', this)">Alcoholic Beverages</button>
+    <button class="tab-btn" onclick="showTab('other', this)">Other Specialties</button>
+    <button class="tab-btn" onclick="showTab('souvenirs', this)">Souvenirs</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TAB 1: PASTRY
+══════════════════════════════════════════ -->
+<div class="tab-section active" id="tab-pastry">
+  <div class="section-header">
+    <h2>Pastry</h2>
+    <div class="gold-line"></div>
+  </div>
+  <div class="product-grid">
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/pastelaria_01.jpg" alt="Queque" loading="lazy"/></div>
+      <div class="product-info">
+        <h3>Queque</h3>
+        <p class="subtitle">Sponge cake muffin</p>
+      </div>
+      <div class="product-variants">
+        <div class="variant"><span>Plain</span><span class="price">€ 1,70</span></div>
+        <div class="variant"><span>Chocolate</span><span class="price">€ 1,70</span></div>
+        <div class="variant"><span>Apple</span><span class="price">€ 1,70</span></div>
+      </div>
+      <button class="btn-buy" data-name="Queque" data-price="1.70">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/pastelaria_02.jpg" alt="Palmier" loading="lazy"/></div>
+      <div class="product-info">
+        <h3>Palmier</h3>
+        <p class="subtitle">Flaky palmier pastry</p>
+      </div>
+      <div class="product-variants">
+        <div class="variant"><span>Plain</span><span class="price">€ 1,70</span></div>
+        <div class="variant"><span>Sugar glazed</span><span class="price">€ 1,80</span></div>
+        <div class="variant"><span>With filling</span><span class="price">€ 1,80</span></div>
+      </div>
+      <button class="btn-buy" data-name="Palmier" data-price="1.70">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/pastelaria_03.jpg" alt="Bolo de arroz" loading="lazy"/></div>
+      <div class="product-info">
+        <h3>Bolo de arroz</h3>
+        <p class="subtitle">Rice flour cake</p>
+      </div>
+      <div class="product-variants">
+        <div class="variant"><span></span><span class="price">€ 1,70</span></div>
+      </div>
+      <button class="btn-buy" data-name="Bolo de arroz" data-price="1.70">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/pastelaria_04.jpg" alt="Madalena" loading="lazy"/></div>
+      <div class="product-info">
+        <h3>Madalena</h3>
+        <p class="subtitle">Moist sugary muffin</p>
+      </div>
+      <div class="product-variants">
+        <div class="variant"><span></span><span class="price">€ 1,70</span></div>
+      </div>
+      <button class="btn-buy" data-name="Madalena" data-price="1.70">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/pastelaria_05.jpg" alt="Bola de Berlim" loading="lazy"/></div>
+      <div class="product-info">
+        <h3>Bola de Berlim</h3>
+        <p class="subtitle">Doughnut pastry</p>
+      </div>
+      <div class="product-variants">
+        <div class="variant"><span>Plain</span><span class="price">€ 1,70</span></div>
+        <div class="variant"><span>Egg custard</span><span class="price">€ 1,80</span></div>
+        <div class="variant"><span>Chocolate creme</span><span class="price">€ 1,80</span></div>
+        <div class="variant"><span>Custard creme</span><span class="price">€ 1,80</span></div>
+      </div>
+      <button class="btn-buy" data-name="Bola de Berlim" data-price="1.70">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/pastelaria_06.jpg" alt="Delícia" loading="lazy"/></div>
+      <div class="product-info">
+        <h3>Delícia <sup style="font-size:10px;color:#8a7a62">(1)</sup></h3>
+        <p class="subtitle">Puff pastry with egg custard filling</p>
+      </div>
+      <div class="product-variants">
+        <div class="variant"><span></span><span class="price">€ 1,80</span></div>
+      </div>
+      <button class="btn-buy" data-name="Delícia" data-price="1.80">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/pastelaria_07.jpg" alt="Mil Folhas" loading="lazy"/></div>
+      <div class="product-info">
+        <h3>Mil Folhas</h3>
+        <p class="subtitle">Puff pastry with fondant icing</p>
+      </div>
+      <div class="product-variants">
+        <div class="variant"><span></span><span class="price">€ 1,80</span></div>
+      </div>
+      <button class="btn-buy" data-name="Mil Folhas" data-price="1.80">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/pastelaria_08.jpg" alt="Travesseiro" loading="lazy"/></div>
+      <div class="product-info">
+        <h3>Travesseiro</h3>
+        <p class="subtitle">Flaky puff pastry</p>
+      </div>
+      <div class="product-variants">
+        <div class="variant"><span>Egg</span><span class="price">€ 1,80</span></div>
+        <div class="variant"><span>Chocolate</span><span class="price">€ 1,80</span></div>
+      </div>
+      <button class="btn-buy" data-name="Travesseiro" data-price="1.80">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/pastelaria_11.jpg" alt="Torta de chocolate" loading="lazy"/></div>
+      <div class="product-info">
+        <h3>Torta de chocolate</h3>
+        <p class="subtitle">Sponge cake roll with chocolate filling</p>
+      </div>
+      <div class="product-variants">
+        <div class="variant"><span></span><span class="price">€ 1,90</span></div>
+      </div>
+      <button class="btn-buy" data-name="Torta de chocolate" data-price="1.90">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/pastelaria_12.jpg" alt="Toucinho do céu" loading="lazy"/></div>
+      <div class="product-info">
+        <h3>Toucinho do céu <sup style="font-size:10px;color:#8a7a62">(1)(2)</sup></h3>
+        <p class="subtitle">Pudding made with egg yolks on a bed of almonds</p>
+      </div>
+      <div class="product-variants">
+        <div class="variant"><span></span><span class="price">€ 2,50</span></div>
+      </div>
+      <button class="btn-buy" data-name="Toucinho do céu" data-price="2.50">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/pastelaria_13.jpg" alt="Mimos de côco" loading="lazy"/></div>
+      <div class="product-info">
+        <h3>Mimos de côco <sup style="font-size:10px;color:#8a7a62">(1)(2)</sup></h3>
+        <p class="subtitle">Pudding made with egg yolks on a bed of coconut</p>
+      </div>
+      <div class="product-variants">
+        <div class="variant"><span></span><span class="price">€ 1,90</span></div>
+      </div>
+      <button class="btn-buy" data-name="Mimos de côco" data-price="1.90">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/pastelaria_14.jpg" alt="Babás" loading="lazy"/></div>
+      <div class="product-info">
+        <h3>Babás</h3>
+        <p class="subtitle">Moist cupcake with chantilly filling</p>
+      </div>
+      <div class="product-variants">
+        <div class="variant"><span></span><span class="price">€ 1,90</span></div>
+      </div>
+      <button class="btn-buy" data-name="Babás" data-price="1.90">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/pastelaria_15.jpg" alt="Bolo de noz" loading="lazy"/></div>
+      <div class="product-info">
+        <h3>Bolo de noz</h3>
+        <p class="subtitle">Walnut cake with chocolate ganache icing</p>
+      </div>
+      <div class="product-variants">
+        <div class="variant"><span></span><span class="price">€ 2,50</span></div>
+      </div>
+      <button class="btn-buy" data-name="Bolo de noz" data-price="2.50">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/pastelaria_16.jpg" alt="Bolo brigadeiro de chocolate" loading="lazy"/></div>
+      <div class="product-info">
+        <h3>Bolo brigadeiro de chocolate</h3>
+        <p class="subtitle">Chocolate cake</p>
+      </div>
+      <div class="product-variants">
+        <div class="variant"><span></span><span class="price">€ 2,50</span></div>
+      </div>
+      <button class="btn-buy" data-name="Bolo brigadeiro de chocolate" data-price="2.50">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/pastelaria_17.jpg" alt="Éclair" loading="lazy"/></div>
+      <div class="product-info">
+        <h3>Éclair</h3>
+        <p class="subtitle">Choux pastry filled and covered</p>
+      </div>
+      <div class="product-variants">
+        <div class="variant"><span>Vanilla</span><span class="price">€ 1,90</span></div>
+        <div class="variant"><span>Chocolate</span><span class="price">€ 1,90</span></div>
+      </div>
+      <button class="btn-buy" data-name="Éclair" data-price="1.90">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/pastelaria_18.jpg" alt="Duchesse" loading="lazy"/></div>
+      <div class="product-info">
+        <h3>Duchesse</h3>
+        <p class="subtitle">Choux pastry filled and covered in chantilly</p>
+      </div>
+      <div class="product-variants">
+        <div class="variant"><span></span><span class="price">€ 1,90</span></div>
+      </div>
+      <button class="btn-buy" data-name="Duchesse" data-price="1.90">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/pastelaria_09.jpg" alt="Torta de laranja" loading="lazy"/></div>
+      <div class="product-info">
+        <h3>Torta de laranja</h3>
+        <p class="subtitle">Pudding made with orange</p>
+      </div>
+      <div class="product-variants">
+        <div class="variant"><span></span><span class="price">€ 1,90</span></div>
+      </div>
+      <button class="btn-buy" data-name="Torta de laranja" data-price="1.90">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/pastelaria_10.jpg" alt="Torta de ovo" loading="lazy"/></div>
+      <div class="product-info">
+        <h3>Torta de ovo <sup style="font-size:10px;color:#8a7a62">(1)</sup></h3>
+        <p class="subtitle">Sponge cake roll filled with egg custard</p>
+      </div>
+      <div class="product-variants">
+        <div class="variant"><span></span><span class="price">€ 1,70</span></div>
+      </div>
+      <button class="btn-buy" data-name="Torta de ovo" data-price="1.70">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/pastelaria_19.jpg" alt="Croissant com doce de ovo" loading="lazy"/></div>
+      <div class="product-info">
+        <h3>Croissant com doce de ovo</h3>
+        <p class="subtitle">Egg custard filling croissant</p>
+      </div>
+      <div class="product-variants">
+        <div class="variant"><span></span><span class="price">€ 2,50</span></div>
+      </div>
+      <button class="btn-buy" data-name="Croissant com doce de ovo" data-price="2.50">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/pastelaria_20.jpg" alt="Croissant com chocolate" loading="lazy"/></div>
+      <div class="product-info">
+        <h3>Croissant com chocolate</h3>
+        <p class="subtitle">Chocolate croissant</p>
+      </div>
+      <div class="product-variants">
+        <div class="variant"><span></span><span class="price">€ 2,50</span></div>
+      </div>
+      <button class="btn-buy" data-name="Croissant com chocolate" data-price="2.50">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap" style="background:#f0e8d8;display:flex;align-items:center;justify-content:center;">
+        <img src="https://pasteisdebelem.pt/menu/Pasteis-de-Belem-bolos-miniatura-chocolate-AF-196x196.png" alt="Miniatura de chocolate" loading="lazy" style="width:80%;height:80%;object-fit:contain;"/>
+      </div>
+      <div class="product-info">
+        <h3>Miniatura de chocolate <sup style="font-size:10px;color:#8a7a62">sem glúten (3)</sup></h3>
+      </div>
+      <div class="product-variants">
+        <div class="variant"><span></span><span class="price">€ 2,00</span></div>
+      </div>
+      <button class="btn-buy" data-name="Miniatura de chocolate" data-price="2.00">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap" style="background:#f0e8d8;display:flex;align-items:center;justify-content:center;">
+        <img src="https://pasteisdebelem.pt/menu/Pasteis-de-Belem-bolos-cheese-cake-AF-196x196.png" alt="Miniatura de cheesecake" loading="lazy" style="width:80%;height:80%;object-fit:contain;"/>
+      </div>
+      <div class="product-info">
+        <h3>Miniatura de cheesecake <sup style="font-size:10px;color:#8a7a62">sem glúten (3)</sup></h3>
+      </div>
+      <div class="product-variants">
+        <div class="variant"><span></span><span class="price">€ 2,00</span></div>
+      </div>
+      <button class="btn-buy" data-name="Miniatura de cheesecake" data-price="2.00">Buy</button>
+    </div>
+
+  </div>
+  <div class="footnote">
+    (1) Produced with naturally lactose-free ingredients. May contain traces of lactose.<br>
+    (2) Produced with naturally gluten-free ingredients. May contain traces of gluten.<br>
+    (3) Produced with gluten-free certificated ingredients.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TAB 2: SNACKS
+══════════════════════════════════════════ -->
+<div class="tab-section" id="tab-snacks">
+  <div class="section-header"><h2>Snacks</h2><div class="gold-line"></div></div>
+  <div class="product-grid">
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/salgados_01.jpg" alt="Croquetes" loading="lazy"/></div>
+      <div class="product-info"><h3>Croquetes</h3><p class="subtitle">Breaded and deep-fried mince meat</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 1,70</span></div></div>
+      <button class="btn-buy" data-name="Croquetes" data-price="1.70">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/salgados_02.jpg" alt="Pastéis de bacalhau" loading="lazy"/></div>
+      <div class="product-info"><h3>Pastéis de bacalhau</h3><p class="subtitle">Codfish fritters</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 1,90</span></div></div>
+      <button class="btn-buy" data-name="Pastéis de bacalhau" data-price="1.90">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/salgados_03.jpg" alt="Rissol de camarão" loading="lazy"/></div>
+      <div class="product-info"><h3>Rissol de camarão</h3><p class="subtitle">Deep-fried prawn turnover</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 1,90</span></div></div>
+      <button class="btn-buy" data-name="Rissol de camarão" data-price="1.90">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/salgados_04.jpg" alt="Coxas de galinha" loading="lazy"/></div>
+      <div class="product-info"><h3>Coxas de galinha</h3><p class="subtitle">Deep-fried pear-shaped minced chicken fritter</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 1,90</span></div></div>
+      <button class="btn-buy" data-name="Coxas de galinha" data-price="1.90">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/salgados_05.jpg" alt="Pastéis de massa tenra" loading="lazy"/></div>
+      <div class="product-info"><h3>Pastéis de massa tenra</h3><p class="subtitle">Thin-crust meat filled pie</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 1,90</span></div></div>
+      <button class="btn-buy" data-name="Pastéis de massa tenra" data-price="1.90">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/salgados_06.jpg" alt="Chamuças" loading="lazy"/></div>
+      <div class="product-info"><h3>Chamuças</h3><p class="subtitle">Samosas</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 1,70</span></div></div>
+      <button class="btn-buy" data-name="Chamuças" data-price="1.70">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/salgados_07.jpg" alt="Crepe de legumes" loading="lazy"/></div>
+      <div class="product-info"><h3>Crepe de legumes</h3><p class="subtitle">Vegetable crepes</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 1,70</span></div></div>
+      <button class="btn-buy" data-name="Crepe de legumes" data-price="1.70">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/salgados_08.jpg" alt="Empada de pato e espinafres" loading="lazy"/></div>
+      <div class="product-info"><h3>Empada de pato e espinafres</h3><p class="subtitle">Duck and spinach pie</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 2,70</span></div></div>
+      <button class="btn-buy" data-name="Empada de pato e espinafres" data-price="2.70">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/salgados_09.jpg" alt="Empada de galinha" loading="lazy"/></div>
+      <div class="product-info"><h3>Empada de galinha</h3><p class="subtitle">Chicken pie</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 2,50</span></div></div>
+      <button class="btn-buy" data-name="Empada de galinha" data-price="2.50">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/salgados_10.jpg" alt="Folhado de carne" loading="lazy"/></div>
+      <div class="product-info"><h3>Folhado de carne</h3><p class="subtitle">Puff pastry with meat filling</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 2,00</span></div></div>
+      <button class="btn-buy" data-name="Folhado de carne" data-price="2.00">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/salgados_11.jpg" alt="Folhado de salsicha" loading="lazy"/></div>
+      <div class="product-info"><h3>Folhado de salsicha</h3><p class="subtitle">Sausage roll</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 2,00</span></div></div>
+      <button class="btn-buy" data-name="Folhado de salsicha" data-price="2.00">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/salgados_12.jpg" alt="Merenda mista" loading="lazy"/></div>
+      <div class="product-info"><h3>Merenda mista</h3><p class="subtitle">Puff pastry with ham and cheese</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 2,00</span></div></div>
+      <button class="btn-buy" data-name="Merenda mista" data-price="2.00">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/salgados_13.jpg" alt="Alfacinha" loading="lazy"/></div>
+      <div class="product-info"><h3>Alfacinha</h3><p class="subtitle">Puff pastry with ham, cheese and lettuce</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 2,20</span></div></div>
+      <button class="btn-buy" data-name="Alfacinha" data-price="2.20">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/salgados_14.jpg" alt="Empada vegetariana de tempeh" loading="lazy"/></div>
+      <div class="product-info"><h3>Empada vegetariana de tempeh</h3><p class="subtitle">Vegetarian tempeh pie</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 2,80</span></div></div>
+      <button class="btn-buy" data-name="Empada vegetariana de tempeh" data-price="2.80">Buy</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TAB 3: TOASTS & SANDWICHES
+══════════════════════════════════════════ -->
+<div class="tab-section" id="tab-toasts">
+  <div class="section-header"><h2>Toasts & Sandwiches</h2><div class="gold-line"></div></div>
+  <div class="list-section">
+
+    <div class="list-group">
+      <div class="list-group-title">Toasted Sandwiches — Sliced bread / Homemade crusty white bread</div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Ham or cheese</span></div><div class="list-item-right"><span class="list-price">€ 2,60 / € 3,20</span><button class="btn-buy-sm" data-name="Toast Ham or cheese" data-price="2.60">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Ham and cheese</span></div><div class="list-item-right"><span class="list-price">€ 3,30 / € 4,00</span><button class="btn-buy-sm" data-name="Toast Ham and cheese" data-price="3.30">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Cheese and iberian ham</span></div><div class="list-item-right"><span class="list-price">€ 4,90</span><button class="btn-buy-sm" data-name="Toast Cheese and iberian ham" data-price="4.90">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Iberian ham</span></div><div class="list-item-right"><span class="list-price">€ 4,50</span><button class="btn-buy-sm" data-name="Toast Iberian ham" data-price="4.50">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Tuna and mayo</span></div><div class="list-item-right"><span class="list-price">€ 4,50</span><button class="btn-buy-sm" data-name="Toast Tuna and mayo" data-price="4.50">Buy</button></div></div>
+    </div>
+
+    <div class="list-group">
+      <div class="list-group-title">Sandwiches — Sliced / Roll / Homemade crusty white bread</div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Butter</span></div><div class="list-item-right"><span class="list-price">€ 1,50 / € 1,70</span><button class="btn-buy-sm" data-name="Sandwich Butter" data-price="1.50">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Cheese or ham</span></div><div class="list-item-right"><span class="list-price">€ 1,90 / € 2,40</span><button class="btn-buy-sm" data-name="Sandwich Cheese or ham" data-price="1.90">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Cheese and ham</span></div><div class="list-item-right"><span class="list-price">€ 2,10 / € 2,90</span><button class="btn-buy-sm" data-name="Sandwich Cheese and ham" data-price="2.10">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Cheese, ham, boiled egg & lettuce</span></div><div class="list-item-right"><span class="list-price">€ 3,40</span><button class="btn-buy-sm" data-name="Sandwich Cheese ham egg" data-price="3.40">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Mozzarella and tomato</span></div><div class="list-item-right"><span class="list-price">€ 3,80</span><button class="btn-buy-sm" data-name="Sandwich Mozzarella tomato" data-price="3.80">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Iberian ham</span></div><div class="list-item-right"><span class="list-price">€ 3,60</span><button class="btn-buy-sm" data-name="Sandwich Iberian ham" data-price="3.60">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Iberian ham, mozzarella & tomato</span></div><div class="list-item-right"><span class="list-price">€ 4,40</span><button class="btn-buy-sm" data-name="Sandwich Iberian ham mozzarella" data-price="4.40">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Shredded chicken with lettuce</span></div><div class="list-item-right"><span class="list-price">€ 3,90</span><button class="btn-buy-sm" data-name="Sandwich Shredded chicken" data-price="3.90">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Tuna, mayo, boiled egg & lettuce</span></div><div class="list-item-right"><span class="list-price">€ 3,90</span><button class="btn-buy-sm" data-name="Sandwich Tuna mayo" data-price="3.90">Buy</button></div></div>
+    </div>
+
+    <div class="list-group">
+      <div class="list-group-title">Quiches</div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Ham</span></div><div class="list-item-right"><span class="list-price">€ 2,60</span><button class="btn-buy-sm" data-name="Quiche Ham" data-price="2.60">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Spinach</span></div><div class="list-item-right"><span class="list-price">€ 2,60</span><button class="btn-buy-sm" data-name="Quiche Spinach" data-price="2.60">Buy</button></div></div>
+    </div>
+
+    <div class="list-group">
+      <div class="list-group-title">Toast</div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Full portion</span></div><div class="list-item-right"><span class="list-price">€ 1,90 / € 2,20</span><button class="btn-buy-sm" data-name="Toast Full" data-price="1.90">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Half portion</span></div><div class="list-item-right"><span class="list-price">€ 1,50 / € 1,70</span><button class="btn-buy-sm" data-name="Toast Half" data-price="1.50">Buy</button></div></div>
+    </div>
+
+    <div class="list-group">
+      <div class="list-group-title">Croissants</div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Plain</span></div><div class="list-item-right"><span class="list-price">€ 2,00</span><button class="btn-buy-sm" data-name="Croissant Plain" data-price="2.00">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Egg custard filling</span></div><div class="list-item-right"><span class="list-price">€ 2,50</span><button class="btn-buy-sm" data-name="Croissant Egg custard" data-price="2.50">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Chocolate filling</span></div><div class="list-item-right"><span class="list-price">€ 2,50</span><button class="btn-buy-sm" data-name="Croissant Chocolate" data-price="2.50">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Butter</span></div><div class="list-item-right"><span class="list-price">€ 2,20</span><button class="btn-buy-sm" data-name="Croissant Butter" data-price="2.20">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Ham or cheese</span></div><div class="list-item-right"><span class="list-price">€ 2,50</span><button class="btn-buy-sm" data-name="Croissant Ham or cheese" data-price="2.50">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Ham and cheese</span></div><div class="list-item-right"><span class="list-price">€ 2,70</span><button class="btn-buy-sm" data-name="Croissant Ham and cheese" data-price="2.70">Buy</button></div></div>
+    </div>
+
+    <div class="list-group">
+      <div class="list-group-title">Sweet milk brioche / Sweet coconut-topped brioche</div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Plain</span></div><div class="list-item-right"><span class="list-price">€ 1,70</span><button class="btn-buy-sm" data-name="Brioche Plain" data-price="1.70">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Butter</span></div><div class="list-item-right"><span class="list-price">€ 1,90</span><button class="btn-buy-sm" data-name="Brioche Butter" data-price="1.90">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Ham or cheese</span></div><div class="list-item-right"><span class="list-price">€ 2,10</span><button class="btn-buy-sm" data-name="Brioche Ham or cheese" data-price="2.10">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Ham and cheese</span></div><div class="list-item-right"><span class="list-price">€ 2,50</span><button class="btn-buy-sm" data-name="Brioche Ham and cheese" data-price="2.50">Buy</button></div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TAB 4: BEVERAGES
+══════════════════════════════════════════ -->
+<div class="tab-section" id="tab-beverages">
+  <div class="section-header"><h2>Beverages</h2><div class="gold-line"></div></div>
+  <div class="list-section">
+
+    <div class="list-group">
+      <div class="list-group-title">Cafeteria</div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Espresso</span></div><div class="list-item-right"><span class="list-price">€ 1,20</span><button class="btn-buy-sm" data-name="Espresso" data-price="1.20">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Decaffeinated coffee</span></div><div class="list-item-right"><span class="list-price">€ 1,20</span><button class="btn-buy-sm" data-name="Decaffeinated coffee" data-price="1.20">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Double espresso</span></div><div class="list-item-right"><span class="list-price">€ 2,00</span><button class="btn-buy-sm" data-name="Double espresso" data-price="2.00">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Espresso with foamed milk</span></div><div class="list-item-right"><span class="list-price">€ 1,70</span><button class="btn-buy-sm" data-name="Espresso foamed milk" data-price="1.70">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Latte</span></div><div class="list-item-right"><span class="list-price">€ 1,70</span><button class="btn-buy-sm" data-name="Latte" data-price="1.70">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Coffee with milk</span></div><div class="list-item-right"><span class="list-price">€ 2,00</span><button class="btn-buy-sm" data-name="Coffee with milk" data-price="2.00">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Cappuccino</span></div><div class="list-item-right"><span class="list-price">€ 3,00</span><button class="btn-buy-sm" data-name="Cappuccino" data-price="3.00">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Chocolate cappuccino</span></div><div class="list-item-right"><span class="list-price">€ 3,20</span><button class="btn-buy-sm" data-name="Chocolate cappuccino" data-price="3.20">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Hot chocolate</span></div><div class="list-item-right"><span class="list-price">€ 3,80</span><button class="btn-buy-sm" data-name="Hot chocolate" data-price="3.80">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Tea (assorted variety)</span></div><div class="list-item-right"><span class="list-price">€ 2,20</span><button class="btn-buy-sm" data-name="Tea" data-price="2.20">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Tea with milk</span></div><div class="list-item-right"><span class="list-price">€ 2,70</span><button class="btn-buy-sm" data-name="Tea with milk" data-price="2.70">Buy</button></div></div>
+    </div>
+
+    <div class="list-group">
+      <div class="list-group-title">Water</div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Still mineral water</span></div><div class="list-item-right"><span class="list-price">€ 1,60</span><button class="btn-buy-sm" data-name="Still water" data-price="1.60">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Sparkling mineral water</span></div><div class="list-item-right"><span class="list-price">€ 1,90</span><button class="btn-buy-sm" data-name="Sparkling water" data-price="1.90">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Tonic water Schwepps</span></div><div class="list-item-right"><span class="list-price">€ 2,00</span><button class="btn-buy-sm" data-name="Tonic water" data-price="2.00">Buy</button></div></div>
+    </div>
+
+    <div class="list-group">
+      <div class="list-group-title">Juices</div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Freshly squeezed orange juice</span></div><div class="list-item-right"><span class="list-price">€ 4,00</span><button class="btn-buy-sm" data-name="Orange juice" data-price="4.00">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Lemonade</span></div><div class="list-item-right"><span class="list-price">€ 3,50</span><button class="btn-buy-sm" data-name="Lemonade" data-price="3.50">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Nectars</span></div><div class="list-item-right"><span class="list-price">€ 2,20</span><button class="btn-buy-sm" data-name="Nectars" data-price="2.20">Buy</button></div></div>
+    </div>
+
+    <div class="list-group">
+      <div class="list-group-title">Milkshakes</div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Strawberry / Mango / Chocolate</span></div><div class="list-item-right"><span class="list-price">€ 4,50</span><button class="btn-buy-sm" data-name="Milkshake" data-price="4.50">Buy</button></div></div>
+    </div>
+
+    <div class="list-group">
+      <div class="list-group-title">Soda / Soft Drinks</div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Sumol / Coca-Cola / 7 Up / Fanta / Ice Tea</span></div><div class="list-item-right"><span class="list-price">€ 2,20</span><button class="btn-buy-sm" data-name="Soft drink" data-price="2.20">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Redcurrant juice</span></div><div class="list-item-right"><span class="list-price">€ 3,00</span><button class="btn-buy-sm" data-name="Redcurrant juice" data-price="3.00">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Mazagran</span></div><div class="list-item-right"><span class="list-price">€ 3,00</span><button class="btn-buy-sm" data-name="Mazagran" data-price="3.00">Buy</button></div></div>
+    </div>
+
+    <div class="list-group">
+      <div class="list-group-title">Beer</div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Draught beer Super Bock (20 cl)</span></div><div class="list-item-right"><span class="list-price">€ 1,75</span><button class="btn-buy-sm" data-name="Draught beer" data-price="1.75">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Bottled beer Sagres/Super Bock (33 cl)</span></div><div class="list-item-right"><span class="list-price">€ 2,50</span><button class="btn-buy-sm" data-name="Bottled beer" data-price="2.50">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Super Bock Stout (33 cl)</span></div><div class="list-item-right"><span class="list-price">€ 3,00</span><button class="btn-buy-sm" data-name="Super Bock Stout" data-price="3.00">Buy</button></div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TAB 5: ALCOHOLIC BEVERAGES
+══════════════════════════════════════════ -->
+<div class="tab-section" id="tab-alcoholic">
+  <div class="section-header"><h2>Alcoholic Beverages</h2><div class="gold-line"></div></div>
+  <div class="list-section">
+
+    <div class="list-group">
+      <div class="list-group-title">Port Wine (5 cl)</div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Current</span></div><div class="list-item-right"><span class="list-price">€ 3,50</span><button class="btn-buy-sm" data-name="Port wine Current" data-price="3.50">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Reserve</span></div><div class="list-item-right"><span class="list-price">€ 5,00</span><button class="btn-buy-sm" data-name="Port wine Reserve" data-price="5.00">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">10 year</span></div><div class="list-item-right"><span class="list-price">€ 7,50</span><button class="btn-buy-sm" data-name="Port wine 10 year" data-price="7.50">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">20 year</span></div><div class="list-item-right"><span class="list-price">€ 11,00</span><button class="btn-buy-sm" data-name="Port wine 20 year" data-price="11.00">Buy</button></div></div>
+    </div>
+
+    <div class="list-group">
+      <div class="list-group-title">Madeira Wine (5 cl)</div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Demi-sec</span></div><div class="list-item-right"><span class="list-price">€ 3,50</span><button class="btn-buy-sm" data-name="Madeira Demi-sec" data-price="3.50">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Sweet</span></div><div class="list-item-right"><span class="list-price">€ 3,50</span><button class="btn-buy-sm" data-name="Madeira Sweet" data-price="3.50">Buy</button></div></div>
+    </div>
+
+    <div class="list-group">
+      <div class="list-group-title">Red Wine</div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Herdade do Peso Colheita (Alentejo)</span></div><div class="list-item-right"><span class="list-price">75 cl € 15,00</span><button class="btn-buy-sm" data-name="Herdade do Peso" data-price="15.00">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Esteva Casa Ferreirinha (Douro)</span></div><div class="list-item-right"><span class="list-price">€ 8,50 / € 13,00</span><button class="btn-buy-sm" data-name="Esteva Ferreirinha" data-price="8.50">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Portugal since 1143</span></div><div class="list-item-right"><span class="list-price">€ 10 / € 20</span><button class="btn-buy-sm" data-name="Portugal 1143 Red" data-price="10.00">Buy</button></div></div>
+    </div>
+
+    <div class="list-group">
+      <div class="list-group-title">White Wine</div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Sossego (Alentejo)</span></div><div class="list-item-right"><span class="list-price">€ 8,50 / € 13,00</span><button class="btn-buy-sm" data-name="Sossego White" data-price="8.50">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Planalto dry (Douro)</span></div><div class="list-item-right"><span class="list-price">€ 9,00 / € 15,00</span><button class="btn-buy-sm" data-name="Planalto White" data-price="9.00">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Magos frisante (20 cl)</span></div><div class="list-item-right"><span class="list-price">€ 4,00</span><button class="btn-buy-sm" data-name="Magos frisante" data-price="4.00">Buy</button></div></div>
+    </div>
+
+    <div class="list-group">
+      <div class="list-group-title">Rosé</div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Mateus rosé</span></div><div class="list-item-right"><span class="list-price">€ 8,50 / € 13,00</span><button class="btn-buy-sm" data-name="Mateus rosé" data-price="8.50">Buy</button></div></div>
+    </div>
+
+    <div class="list-group">
+      <div class="list-group-title">Vinho Verde</div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Casal Garcia</span></div><div class="list-item-right"><span class="list-price">€ 8,00 / € 13,00</span><button class="btn-buy-sm" data-name="Casal Garcia" data-price="8.00">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Quinta da Aveleda</span></div><div class="list-item-right"><span class="list-price">€ 9,00 / € 15,00</span><button class="btn-buy-sm" data-name="Quinta da Aveleda" data-price="9.00">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Gatão</span></div><div class="list-item-right"><span class="list-price">€ 8,00 / € 13,00</span><button class="btn-buy-sm" data-name="Gatão" data-price="8.00">Buy</button></div></div>
+    </div>
+
+    <div class="list-group">
+      <div class="list-group-title">Sparkling Wine</div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Murganheira reserve brute</span></div><div class="list-item-right"><span class="list-price">75 cl € 17,00</span><button class="btn-buy-sm" data-name="Murganheira brute" data-price="17.00">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Murganheira reserve sweet</span></div><div class="list-item-right"><span class="list-price">75 cl € 17,00</span><button class="btn-buy-sm" data-name="Murganheira sweet" data-price="17.00">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Murganheira reserva demi-sec</span></div><div class="list-item-right"><span class="list-price">75 cl € 17,00</span><button class="btn-buy-sm" data-name="Murganheira demi-sec" data-price="17.00">Buy</button></div></div>
+    </div>
+
+    <div class="list-group">
+      <div class="list-group-title">Aperitifs & Liqueurs (5 cl)</div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Moscatel de Setúbal / Favaios</span></div><div class="list-item-right"><span class="list-price">€ 3,50</span><button class="btn-buy-sm" data-name="Moscatel" data-price="3.50">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Martini</span></div><div class="list-item-right"><span class="list-price">€ 3,50</span><button class="btn-buy-sm" data-name="Martini" data-price="3.50">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Licor Beirão</span></div><div class="list-item-right"><span class="list-price">€ 3,50</span><button class="btn-buy-sm" data-name="Licor Beirão" data-price="3.50">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Amarguinha almond liqueur</span></div><div class="list-item-right"><span class="list-price">€ 3,50</span><button class="btn-buy-sm" data-name="Amarguinha" data-price="3.50">Buy</button></div></div>
+    </div>
+
+    <div class="list-group">
+      <div class="list-group-title">Cocktails & Whiskey</div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Gin tonic / Vodka / Cuba libre</span></div><div class="list-item-right"><span class="list-price">€ 5,50</span><button class="btn-buy-sm" data-name="Gin tonic" data-price="5.50">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Whisky Famous Grouse / J&B / Jameson</span></div><div class="list-item-right"><span class="list-price">€ 5,50</span><button class="btn-buy-sm" data-name="Whisky" data-price="5.50">Buy</button></div></div>
+      <div class="list-item"><div class="list-item-left"><span class="list-item-name">Whisky Cardhu / J&B 15 years</span></div><div class="list-item-right"><span class="list-price">€ 8,00</span><button class="btn-buy-sm" data-name="Whisky premium" data-price="8.00">Buy</button></div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TAB 6: OTHER SPECIALTIES
+══════════════════════════════════════════ -->
+<div class="tab-section" id="tab-other">
+  <div class="section-header"><h2>Other Specialties</h2><div class="gold-line"></div></div>
+  <div class="product-grid">
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/outros_sortido.jpg" alt="Assorted cakes" loading="lazy"/></div>
+      <div class="product-info"><h3>Assorted cakes and pastries</h3></div>
+      <div class="product-variants"><div class="variant"><span>0.250 kg</span><span class="price">€ 6,50</span></div></div>
+      <button class="btn-buy" data-name="Assorted cakes 250g" data-price="6.50">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/outros_marmelada.jpg" alt="Belém marmalade" loading="lazy"/></div>
+      <div class="product-info"><h3>Belém marmalade</h3></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 10,00</span></div></div>
+      <button class="btn-buy" data-name="Belém marmalade" data-price="10.00">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/outros_bolo-ingles.jpg" alt="Fruit cake" loading="lazy"/></div>
+      <div class="product-info"><h3>Fruit cake</h3></div>
+      <div class="product-variants"><div class="variant"><span>per kg</span><span class="price">€ 21,00</span></div></div>
+      <button class="btn-buy" data-name="Fruit cake" data-price="21.00">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/outros_bolo-rei.jpg" alt="Bolo Rei" loading="lazy"/></div>
+      <div class="product-info"><h3>Bolo Rei</h3><p class="subtitle">Available at Christmas</p></div>
+      <div class="product-variants"><div class="variant"><span>per kg</span><span class="price">€ 22,00</span></div></div>
+      <button class="btn-buy" data-name="Bolo Rei" data-price="22.00">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap"><img src="https://pasteisdebelem.pt/menu/assets/img/outros_bolo-rainha.jpg" alt="Bolo-Rainha" loading="lazy"/></div>
+      <div class="product-info"><h3>Bolo-Rainha</h3><p class="subtitle">Available at Christmas</p></div>
+      <div class="product-variants"><div class="variant"><span>per kg</span><span class="price">€ 23,00</span></div></div>
+      <button class="btn-buy" data-name="Bolo-Rainha" data-price="23.00">Buy</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TAB 7: SOUVENIRS
+══════════════════════════════════════════ -->
+<div class="tab-section" id="tab-souvenirs">
+  <div class="section-header"><h2>Souvenirs</h2><div class="gold-line"></div></div>
+  <div class="product-grid">
+
+    <div class="product-card">
+      <div class="img-wrap" style="background:#f0e8d8;display:flex;align-items:center;justify-content:center;"><img src="https://pasteisdebelem.pt/menu/Pasteis-de-Belem-souvenir-Azulejo-flor.png" alt="Tile coasters Flowers" loading="lazy" style="width:80%;height:80%;object-fit:contain;"/></div>
+      <div class="product-info"><h3>Tile coasters</h3><p class="subtitle">Flowers</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 15,00</span></div></div>
+      <button class="btn-buy" data-name="Tile coasters Flowers" data-price="15.00">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap" style="background:#f0e8d8;display:flex;align-items:center;justify-content:center;"><img src="https://pasteisdebelem.pt/menu/Pasteis-de-Belem-souvenir-Azulejo-Geometrico.png" alt="Tile coasters Lines" loading="lazy" style="width:80%;height:80%;object-fit:contain;"/></div>
+      <div class="product-info"><h3>Tile coasters</h3><p class="subtitle">Lines</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 15,00</span></div></div>
+      <button class="btn-buy" data-name="Tile coasters Lines" data-price="15.00">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap" style="background:#f0e8d8;display:flex;align-items:center;justify-content:center;"><img src="https://pasteisdebelem.pt/menu/Pasteis-de-Belem-souvenir-Azulejo-caravela.png" alt="Tile Coaster Boat" loading="lazy" style="width:80%;height:80%;object-fit:contain;"/></div>
+      <div class="product-info"><h3>Tile Coaster</h3><p class="subtitle">Boat</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 15,00</span></div></div>
+      <button class="btn-buy" data-name="Tile Coaster Boat" data-price="15.00">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap" style="background:#f0e8d8;display:flex;align-items:center;justify-content:center;"><img src="https://pasteisdebelem.pt/menu/Pasteis-de-Belem-azulejo-base-de-copos-Circulos.png" alt="Tile coaster Circles" loading="lazy" style="width:80%;height:80%;object-fit:contain;"/></div>
+      <div class="product-info"><h3>Tile coaster</h3><p class="subtitle">Circles</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 15,00</span></div></div>
+      <button class="btn-buy" data-name="Tile coaster Circles" data-price="15.00">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap" style="background:#f0e8d8;display:flex;align-items:center;justify-content:center;"><img src="https://pasteisdebelem.pt/menu/Pasteis-de-Belem-Azulejo-iman-geometrico.png" alt="Magnetic Tile Lines" loading="lazy" style="width:80%;height:80%;object-fit:contain;"/></div>
+      <div class="product-info"><h3>Magnetic Tile</h3><p class="subtitle">Lines</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 12,00</span></div></div>
+      <button class="btn-buy" data-name="Magnetic Tile Lines" data-price="12.00">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap" style="background:#f0e8d8;display:flex;align-items:center;justify-content:center;"><img src="https://pasteisdebelem.pt/menu/Pasteis-de-Belem-Azulejo-iman-flores.png" alt="Magnetic Tile Flowers" loading="lazy" style="width:80%;height:80%;object-fit:contain;"/></div>
+      <div class="product-info"><h3>Magnetic Tile</h3><p class="subtitle">Flowers</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 12,00</span></div></div>
+      <button class="btn-buy" data-name="Magnetic Tile Flowers" data-price="12.00">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap" style="background:#f0e8d8;display:flex;align-items:center;justify-content:center;"><img src="https://pasteisdebelem.pt/menu/Pasteis-de-Belem-souvenir-Azulejo-iman-caravela.png" alt="Magnetic Tile Boat" loading="lazy" style="width:80%;height:80%;object-fit:contain;"/></div>
+      <div class="product-info"><h3>Magnetic Tile</h3><p class="subtitle">Boat</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 12,00</span></div></div>
+      <button class="btn-buy" data-name="Magnetic Tile Boat" data-price="12.00">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap" style="background:#f0e8d8;display:flex;align-items:center;justify-content:center;"><img src="https://pasteisdebelem.pt/menu/Pasteis-de-Belem-souvenir-avental-azul-AF-196x196.1.png" alt="Apron Blue" loading="lazy" style="width:80%;height:80%;object-fit:contain;"/></div>
+      <div class="product-info"><h3>Apron</h3><p class="subtitle">Blue</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 12,00</span></div></div>
+      <button class="btn-buy" data-name="Apron Blue" data-price="12.00">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap" style="background:#f0e8d8;display:flex;align-items:center;justify-content:center;"><img src="https://pasteisdebelem.pt/menu/Pasteis-de-Belem-souvenir-avental-branco-AF-196x196.png" alt="Apron White" loading="lazy" style="width:80%;height:80%;object-fit:contain;"/></div>
+      <div class="product-info"><h3>Apron</h3><p class="subtitle">White</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 12,00</span></div></div>
+      <button class="btn-buy" data-name="Apron White" data-price="12.00">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap" style="background:#f0e8d8;display:flex;align-items:center;justify-content:center;"><img src="https://pasteisdebelem.pt/menu/Pateis-de-Belem-souvenir-barrete-AF-196x196.png" alt="Cook cap" loading="lazy" style="width:80%;height:80%;object-fit:contain;"/></div>
+      <div class="product-info"><h3>Cook cap</h3></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 15,00</span></div></div>
+      <button class="btn-buy" data-name="Cook cap" data-price="15.00">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap" style="background:#f0e8d8;display:flex;align-items:center;justify-content:center;"><img src="https://pasteisdebelem.pt/menu/Pasteis-de-Belem-souvenir-chavena-cafe-196x196.png" alt="Small cup" loading="lazy" style="width:80%;height:80%;object-fit:contain;"/></div>
+      <div class="product-info"><h3>Small cup</h3></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 12,00</span></div></div>
+      <button class="btn-buy" data-name="Small cup" data-price="12.00">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap" style="background:#f0e8d8;display:flex;align-items:center;justify-content:center;"><img src="https://pasteisdebelem.pt/menu/Pasteis-de-Belem-souvenir-chavena-cha-196x196.png" alt="Big cup" loading="lazy" style="width:80%;height:80%;object-fit:contain;"/></div>
+      <div class="product-info"><h3>Big cup</h3></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 15,00</span></div></div>
+      <button class="btn-buy" data-name="Big cup" data-price="15.00">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap" style="background:#f0e8d8;display:flex;align-items:center;justify-content:center;"><img src="https://pasteisdebelem.pt/menu/Pasteis-de-Belem-souvenir-calice-196x196.png" alt="Goblet" loading="lazy" style="width:80%;height:80%;object-fit:contain;"/></div>
+      <div class="product-info"><h3>Goblet</h3></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 9,00</span></div></div>
+      <button class="btn-buy" data-name="Goblet" data-price="9.00">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap" style="background:#f0e8d8;display:flex;align-items:center;justify-content:center;"><img src="https://pasteisdebelem.pt/menu/Pasteis-de-Belem-souvenir-caneleiro-196x196.png" alt="Cinnamon Dispenser" loading="lazy" style="width:80%;height:80%;object-fit:contain;"/></div>
+      <div class="product-info"><h3>Cinnamon Dispenser</h3></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 20,00</span></div></div>
+      <button class="btn-buy" data-name="Cinnamon Dispenser" data-price="20.00">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap" style="background:#f0e8d8;display:flex;align-items:center;justify-content:center;"><img src="https://pasteisdebelem.pt/menu/Pasteis-de-Belem-Souvenir-pastel-ceramica-196x196.png" alt="Ceramic pastel" loading="lazy" style="width:80%;height:80%;object-fit:contain;"/></div>
+      <div class="product-info"><h3>Ceramic pastel</h3></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 12,00</span></div></div>
+      <button class="btn-buy" data-name="Ceramic pastel" data-price="12.00">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap" style="background:#f0e8d8;display:flex;align-items:center;justify-content:center;"><img src="https://pasteisdebelem.pt/menu/Pasteis-de-Belem-souvenir-tshirt-confeitaria-branca-AF-196x196.png" alt="T-shirt White" loading="lazy" style="width:80%;height:80%;object-fit:contain;"/></div>
+      <div class="product-info"><h3>T-shirt</h3><p class="subtitle">White</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 20,00</span></div></div>
+      <button class="btn-buy" data-name="T-shirt White" data-price="20.00">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap" style="background:#f0e8d8;display:flex;align-items:center;justify-content:center;"><img src="https://pasteisdebelem.pt/menu/Pasteis-de-Belem-souvenir-tshirt-confeitaria-azul-1-AF-196x196.jpg.png" alt="T-shirt Blue" loading="lazy" style="width:80%;height:80%;object-fit:contain;"/></div>
+      <div class="product-info"><h3>T-shirt</h3><p class="subtitle">Blue</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 20,00</span></div></div>
+      <button class="btn-buy" data-name="T-shirt Blue" data-price="20.00">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap" style="background:#f0e8d8;display:flex;align-items:center;justify-content:center;"><img src="https://pasteisdebelem.pt/menu/Pasteis-de-Belem-Saco-de-pano-branco.png" alt="Cloth bag White" loading="lazy" style="width:80%;height:80%;object-fit:contain;"/></div>
+      <div class="product-info"><h3>Cloth bag</h3><p class="subtitle">White</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 10,00</span></div></div>
+      <button class="btn-buy" data-name="Cloth bag White" data-price="10.00">Buy</button>
+    </div>
+
+    <div class="product-card">
+      <div class="img-wrap" style="background:#f0e8d8;display:flex;align-items:center;justify-content:center;"><img src="https://pasteisdebelem.pt/menu/Pasteis-de-Belem-Saco-de-pano-azul.png" alt="Cloth bag Blue" loading="lazy" style="width:80%;height:80%;object-fit:contain;"/></div>
+      <div class="product-info"><h3>Cloth bag</h3><p class="subtitle">Blue</p></div>
+      <div class="product-variants"><div class="variant"><span></span><span class="price">€ 10,00</span></div></div>
+      <button class="btn-buy" data-name="Cloth bag Blue" data-price="10.00">Buy</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    © PASTÉIS DE BELÉM® &nbsp;•&nbsp; Rua de Belém nº 84 a 92, 1300 – 085 Lisboa<br />
+    Portugal &nbsp;•&nbsp; Tel: <strong>+351 21 363 74 23</strong>
+  </div>
+  <div class="footer-links">
+    <a href="#">Livro de Reclamações</a>
+    <a href="#">Política de Privacidade</a>
+  </div>
+</footer>
+
+<script>
+  // ── Tab switching
+  function showTab(id, btn) {
+    document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    btn.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Mobile menu
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileMenu   = document.getElementById('mobileMenu');
+  const menuBackdrop = document.getElementById('menuBackdrop');
+
+  hamburgerBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('open');
+    menuBackdrop.classList.toggle('open');
+  });
+  menuBackdrop.addEventListener('click', closeMobileMenu);
+
+  function closeMobileMenu() {
+    mobileMenu.classList.remove('open');
+    menuBackdrop.classList.remove('open');
+  }
+
+  // ── BUY BUTTON HANDLER
+  // =========================================================
+  //  CHECKOUT INTEGRATION POINT
+  //  Each button carries:
+  //    data-name  = product name (string)
+  //    data-price = unit price   (float)
+  //
+  //  Replace the alert below with your own logic, e.g.:
+  //    addToStripeCart(name, price)
+  //    addToWooCart(productId)
+  //    window.location.href = checkoutUrl
+  // =========================================================
+  document.querySelectorAll('.btn-buy, .btn-buy-sm').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const name  = this.dataset.name;
+      const price = this.dataset.price;
+
+      // ↓↓↓ REPLACE THIS WITH YOUR CHECKOUT LOGIC ↓↓↓
+      alert(`Add to cart:\n${name} — € ${parseFloat(price).toFixed(2)}\n\n(Connect your checkout here)`);
+      // ↑↑↑ REPLACE THIS WITH YOUR CHECKOUT LOGIC ↑↑↑
+    });
+  });
+</script>
+</body>
+</html>
